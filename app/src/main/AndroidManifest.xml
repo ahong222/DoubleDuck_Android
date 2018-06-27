@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.Login.RegisterActivity"/>
+        <activity android:name=".ui.ManageDishes.ManageDishesActivity"/>
     </application>
 
 </manifest>

@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.lianqy.doubleduck_android.R;
+import com.example.lianqy.doubleduck_android.ui.ManageDishes.ManageDishesActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -53,8 +54,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login() {
+
         String acc = account_text.getText().toString();
         String pass = password_text.getText().toString();
+
+        /*
         if (acc.isEmpty()) {
             Toast.makeText(getApplicationContext(), "用户名不能为空", Toast.LENGTH_SHORT).show();
         }
@@ -63,6 +67,21 @@ public class LoginActivity extends AppCompatActivity {
         }
         if (acc.equals("123") && pass.equals("123")) {
             Toast.makeText(getApplicationContext(), "登陆成功", Toast.LENGTH_SHORT).show();
+
+            //从服务器获取是否账号密码匹配
+            //跳转到菜品管理页面
+            //测试直接点击登录跳转到管理界面
+            Intent intent = new Intent();
+            intent.setClass(LoginActivity.this, ManageDishesActivity.class);
+            startActivity(intent);
+            finish();
         }
+        */
+
+        //直接点击登录跳转到管理界面
+        Intent intent = new Intent();
+        intent.setClass(LoginActivity.this, ManageDishesActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

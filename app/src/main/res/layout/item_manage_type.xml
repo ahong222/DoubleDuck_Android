@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+    <TextView
+        android:id="@+id/type"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:hint="炙烤类"
+        android:textSize="20sp"
+        android:textColor="@color/lightSlateGray"/>
+
+    <View
+        android:layout_alignBottom="@+id/type"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/darkGrayForDivider"/>
+
+
+</RelativeLayout>
