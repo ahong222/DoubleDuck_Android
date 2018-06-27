@@ -1,6 +1,5 @@
-package com.example.lianqy.doubleduck_android.ui.ManageDishes;
+package com.example.lianqy.doubleduck_android.ui.ManageDishes.adapter;
 
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

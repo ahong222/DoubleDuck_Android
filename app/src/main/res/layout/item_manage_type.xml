@@ -9,13 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="59dp"
         android:hint="炙烤类"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:textColor="@color/lightSlateGray"/>
 
     <View
         android:layout_alignBottom="@+id/type"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/darkGray"/>
+        android:background="@color/darkGrayForDivider"/>
 
 
 </RelativeLayout>

@@ -1,6 +1,5 @@
 package com.example.lianqy.doubleduck_android.ui.ManageDishes;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,16 +13,20 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lianqy.doubleduck_android.R;
 import com.example.lianqy.doubleduck_android.model.Dish;
 import com.example.lianqy.doubleduck_android.model.Type;
+import com.example.lianqy.doubleduck_android.ui.ManageDishes.adapter.ManageDishAdapter;
+import com.example.lianqy.doubleduck_android.ui.ManageDishes.adapter.ManageTypeAdapter;
+import com.example.lianqy.doubleduck_android.ui.ManageDishes.dialog.DishShortClickDialog;
+import com.example.lianqy.doubleduck_android.ui.ManageDishes.dialog.TypeLongClickDialog;
 import com.example.lianqy.doubleduck_android.util.BitmapUtil;
 
 import java.util.ArrayList;
@@ -63,61 +66,45 @@ public class ManageDishesActivity extends AppCompatActivity{
         mManageDishAdapter.setOnItemClickListener(new ManageDishAdapter.OnItemClickListener() {
             @Override
             public void onClick(final int position) {
-                //短按查看dish详情，并且可以修改
-                //对话框
-                LayoutInflater factor = LayoutInflater.from(ManageDishesActivity.this);
-                final View dishShortClickDialog = factor.inflate(R.layout.dish_short_click_dialog, null);
-                AlertDialog.Builder builder = new AlertDialog.Builder(ManageDishesActivity.this);
-                builder.setView(dishShortClickDialog);
-
-                final EditText name, price, des;
-                name = dishShortClickDialog.findViewById(R.id.name);
-                price = dishShortClickDialog.findViewById(R.id.price);
-                des = dishShortClickDialog.findViewById(R.id.des);
-                final ImageView icon = dishShortClickDialog.findViewById(R.id.icon);
 
                 final Dish d = mDishList.get(position);
 
-                name.setText(d.getName());
-                price.setText(d.getPrice());
-                des.setText(d.getDes());
-                icon.setImageBitmap(BitmapUtil.byteArrayToBitmap(d.getSrc()));
-
-                //点击icon直接转到手机相册界面选取图片作为菜品的新icon
-                icon.setOnClickListener(new View.OnClickListener() {
+                //短按查看dish详情，并且可以修改
+                //对话框
+                final DishShortClickDialog dialog = new DishShortClickDialog(ManageDishesActivity.this, d);
+                dialog.show();
+                dialog.setClickListener(new DishShortClickDialog.ClickListenerInterface() {
                     @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent, RESULT);
-                        //有一个问题就是点击该图片origin之后打开相册选择图片new
-                        //如果将origin赋值为图片New,会出现闪退的情况
-                        //但是注销此句（即不将new赋值），点击更改后adapter会更新dish的图片为new
-                        //icon.setImageBitmap(BitmapUtil.byteArrayToBitmap(byteArray));
-                    }
-                });
-
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.setPositiveButton("更改", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        d.setName(name.getText().toString());
-                        d.setPrice(price.getText().toString());
-                        d.setDes(des.getText().toString());
+                    public void doResetOrSure() {
+                        d.setName(dialog.getName());
+                        d.setPrice(dialog.getPrice());
+                        d.setDes(dialog.getDes());
                         d.setSrc(byteArray == null ? d.getSrc() : byteArray);
 
                         mDishList.set(position, d);
                         dishRV.getAdapter().notifyItemChanged(position);
                         dialog.dismiss();
                     }
+
+                    @Override
+                    public void doCancel() {
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void doFetchPhoto() {
+                        //点击icon直接转到手机相册界面选取图片作为菜品的新icon
+                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intent, RESULT);
+                        //有一个问题就是点击该图片origin之后打开相册选择图片new
+                        //如果将origin赋值为图片New,会出现闪退的情况
+                        //但是注销此句（即不将new赋值），点击更改后adapter会更新dish的图片为new
+                        //icon.setImageBitmap(BitmapUtil.byteArrayToBitmap(byteArray));
+
+                        Toast.makeText(getApplicationContext(), "点击了相册", Toast.LENGTH_SHORT).show();
+                    }
                 });
 
-                final AlertDialog alertDialog = builder.create();
-                alertDialog.show();
             }
 
             @Override
@@ -150,45 +137,32 @@ public class ManageDishesActivity extends AppCompatActivity{
             public void onLongClick(final int position) {
 
                 //长按选择更改type name，或者删除此类标
-                LayoutInflater factor = LayoutInflater.from(ManageDishesActivity.this);
-                final View typeLongClickDialog = factor.inflate(R.layout.type_long_click_dialog, null);
-                AlertDialog.Builder builder = new AlertDialog.Builder(ManageDishesActivity.this);
-                builder.setView(typeLongClickDialog);
-
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                final Type t = mTypeList.get(position);
+                final TypeLongClickDialog dialog = new TypeLongClickDialog(ManageDishesActivity.this, t);
+                dialog.show();
+                dialog.setClickListener(new TypeLongClickDialog.ClickListenerInterface() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Type t = mTypeList.get(position);
-                        mTypeList.remove(position);
-                        typeRV.getAdapter().notifyItemRemoved(position);
-                    }
-                });
-
-                final AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-
-                typeLongClickDialog.findViewById(R.id.resetTypeName).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    public void doReset() {
                         //获取新的type name
-                        EditText et = typeLongClickDialog.findViewById(R.id.editTypeName);
-                        String name = et.getText().toString();
-
-                        Type t = mTypeList.get(position);
-                        t.setType(name);
+                        t.setType(dialog.getTypeName());
                         mTypeList.set(position, t);
                         typeRV.getAdapter().notifyItemChanged(position);
 
-                        alertDialog.dismiss();
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void doCancel() {
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void doDeleteOrSure() {
+                        mTypeList.remove(position);
+                        typeRV.getAdapter().notifyItemRemoved(position);
+                        dialog.dismiss();
                     }
                 });
-
             }
         });
 
@@ -200,7 +174,29 @@ public class ManageDishesActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 //增加新的dish
-                //写一个弹出的对话框吧
+                final DishShortClickDialog dialog = new DishShortClickDialog(ManageDishesActivity.this, null);
+                dialog.show();
+                dialog.setClickListener(new DishShortClickDialog.ClickListenerInterface() {
+                    @Override
+                    public void doResetOrSure() {
+                        //按下确定键增加新的dish
+                        Dish d = new Dish(dialog.getName(), dialog.getPrice(), "t1", dialog.getDes(), dialog.getSrc());
+
+                        mDishList.add(d);
+                        dishRV.getAdapter().notifyItemInserted(mDishList.size()-1);
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void doCancel() {
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void doFetchPhoto() {
+
+                    }
+                });
             }
         });
 
@@ -208,7 +204,28 @@ public class ManageDishesActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 //增加新的type
-                //直接一个对话框只包含一个text就行吧
+                final TypeLongClickDialog dialog = new TypeLongClickDialog(ManageDishesActivity.this, null);
+                dialog.show();
+                dialog.setClickListener(new TypeLongClickDialog.ClickListenerInterface() {
+                    @Override
+                    public void doReset() {
+                        //已经隐藏，不管
+                    }
+
+                    @Override
+                    public void doCancel() {
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void doDeleteOrSure() {
+                        //确定新增一个type
+                        Type t = new Type(dialog.getTypeName(), null);
+                        mTypeList.add(t);
+                        typeRV.getAdapter().notifyItemInserted(mTypeList.size() - 1);
+                        dialog.dismiss();
+                    }
+                });
             }
         });
     }
@@ -226,25 +243,25 @@ public class ManageDishesActivity extends AppCompatActivity{
         ArrayList<Dish> dishes2 = new ArrayList<>();
         ArrayList<Dish> dishes3 = new ArrayList<>();
 
-        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_password);
+        Bitmap bitmap = BitmapFactory.decodeResource(ManageDishesActivity.this.getResources(), R.drawable.ic_password);
         byte[] array = BitmapUtil.bitmapToByteArray(bitmap);
-        for(int i = 0; i < 10; i ++){
-            Dish d = new Dish("t1 " + Integer.toString(i), "¥ " + Integer.toString(i*2),
-                    Integer.toString(i/10 + 1), "i am dish " + Integer.toString(i) + "哈哈哈哈啊啊哈哈哈哈哈啊啊哈",
+        for (int i = 0; i < 10; i++) {
+            Dish d = new Dish("t1 " + Integer.toString(i), "¥ " + Integer.toString(i * 2),
+                    Integer.toString(i / 10 + 1), "i am dish " + Integer.toString(i) + "哈哈哈哈啊啊哈哈哈哈哈啊啊哈",
                     array);
 
             dishes1.add(d);
         }
-        for(int i = 0; i < 10; i ++){
-            Dish d = new Dish("t2 " + Integer.toString(i), "¥ " + Integer.toString(i*2),
-                    Integer.toString(i/10 + 1), "i am dish " + Integer.toString(i) + "哈哈哈哈啊啊哈哈哈哈哈啊啊哈",
+        for (int i = 0; i < 10; i++) {
+            Dish d = new Dish("t2 " + Integer.toString(i), "¥ " + Integer.toString(i * 2),
+                    Integer.toString(i / 10 + 1), "i am dish " + Integer.toString(i) + "哈哈哈哈啊啊哈哈哈哈哈啊啊哈",
                     array);
 
             dishes2.add(d);
         }
-        for(int i = 0; i < 10; i ++){
-            Dish d = new Dish("t3 " + Integer.toString(i), "¥ " + Integer.toString(i*2),
-                    Integer.toString(i/10 + 1), "i am dish " + Integer.toString(i) + "哈哈哈哈啊啊哈哈哈哈哈啊啊哈",
+        for (int i = 0; i < 10; i++) {
+            Dish d = new Dish("t3 " + Integer.toString(i), "¥ " + Integer.toString(i * 2),
+                    Integer.toString(i / 10 + 1), "i am dish " + Integer.toString(i) + "哈哈哈哈啊啊哈哈哈哈哈啊啊哈",
                     array);
 
             dishes3.add(d);
@@ -284,5 +301,4 @@ public class ManageDishesActivity extends AppCompatActivity{
             byteArray = BitmapUtil.bitmapToByteArray(bm);
         }
     }
-
 }

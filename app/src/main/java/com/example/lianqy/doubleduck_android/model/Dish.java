@@ -1,5 +1,13 @@
 package com.example.lianqy.doubleduck_android.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+
+import com.example.lianqy.doubleduck_android.R;
+import com.example.lianqy.doubleduck_android.ui.ManageDishes.ManageDishesActivity;
+import com.example.lianqy.doubleduck_android.util.BitmapUtil;
+
 public class Dish {
     private byte[] src;
     private String name;
@@ -19,9 +27,10 @@ public class Dish {
         this(name, price, type,"", src);
     }
 
-    public Dish(String name, String price, byte[] src){
-        this(name, price, "","", src);
+    public Dish(String name, String type, String price, String des){
+        this(name, price, type, des, null);
     }
+
 
     public void setName(String name) {
         this.name = name;

@@ -33,7 +33,7 @@
                     android:layout_margin="12dp"
                     android:hint="炙烤双鸭"
                     android:textSize="20sp"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/cadetBlue"
                     android:maxLines="1"
                     android:ellipsize="end"/>
                 <TextView
@@ -44,6 +44,7 @@
                     android:layout_marginTop="12dp"
                     android:hint="28.00"
                     android:textSize="16sp"
+                    android:textColor="@color/darkGrayForText"
                     android:maxLines="1"
                     android:ellipsize="end"/>
             </LinearLayout>
@@ -53,10 +54,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="8dp"
                 android:hint="我是啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦"
                 android:textSize="12sp"
-                android:maxLines="1"
+                android:textColor="@color/darkGrayForText"
+                android:maxLines="2"
                 android:ellipsize="end"/>
 
         </LinearLayout>
@@ -66,7 +67,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/darkGray"/>
+        android:background="@color/darkGrayForDivider"/>
 
 
 </LinearLayout>

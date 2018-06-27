@@ -7,5 +7,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    
+    <style name="myEditText" parent="AlertDialog.AppCompat.Light">
+        <item name="colorControlNormal">@color/darkGrayForDivider</item>
+        <item name="colorControlActivated">@android:color/darker_gray</item>
+    </style>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.example.lianqy.doubleduck_android.ui.ManageDishes;
+package com.example.lianqy.doubleduck_android.ui.ManageDishes.adapter;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
