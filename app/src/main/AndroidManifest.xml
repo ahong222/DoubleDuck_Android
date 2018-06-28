@@ -20,4 +20,7 @@
         <activity android:name=".ui.ManageDishes.ManageDishesActivity"/>
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+
 </manifest>

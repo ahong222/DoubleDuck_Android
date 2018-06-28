@@ -9,7 +9,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.lianqy.doubleduck_android.R;
+import com.example.lianqy.doubleduck_android.service.LoginService;
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.ManageDishesActivity;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -58,7 +62,12 @@ public class LoginActivity extends AppCompatActivity {
         String acc = account_text.getText().toString();
         String pass = password_text.getText().toString();
 
-        /*
+        /*Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://172.18.218.192:9090/v1/salers/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        LoginService service = retrofit.create(LoginService.class);
+
         if (acc.isEmpty()) {
             Toast.makeText(getApplicationContext(), "用户名不能为空", Toast.LENGTH_SHORT).show();
         }
@@ -66,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "密码不能为空", Toast.LENGTH_SHORT).show();
         }
         if (acc.equals("123") && pass.equals("123")) {
-            Toast.makeText(getApplicationContext(), "登陆成功", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "登陆成功", Toast.LENGTH_SHORT).show();
 
             //从服务器获取是否账号密码匹配
             //跳转到菜品管理页面
@@ -75,8 +84,8 @@ public class LoginActivity extends AppCompatActivity {
             intent.setClass(LoginActivity.this, ManageDishesActivity.class);
             startActivity(intent);
             finish();
-        }
-        */
+        }*/
+
 
         //直接点击登录跳转到管理界面
         Intent intent = new Intent();
