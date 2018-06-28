@@ -12,4 +12,7 @@ import retrofit2.http.POST;
 public interface LoginService {
     @POST("v1/salers")
     Call<LoginState>getRegisterState(@Body Saler saler);
+
+    @POST("v1/salers/login")
+    Call<LoginState>getLoginState(@Body Saler saler);
 }

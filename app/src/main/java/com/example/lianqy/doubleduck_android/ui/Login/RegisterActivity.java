@@ -1,5 +1,6 @@
 package com.example.lianqy.doubleduck_android.ui.Login;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -86,7 +87,10 @@ public class RegisterActivity extends AppCompatActivity {
             registerCall.enqueue(new Callback<LoginState>() {
                 @Override
                 public void onResponse(Call<LoginState> call, Response<LoginState> response) {
-
+                    Intent intent = new Intent();
+                    intent.setClass(RegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
 
                 @Override

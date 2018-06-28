@@ -9,10 +9,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.lianqy.doubleduck_android.R;
+import com.example.lianqy.doubleduck_android.model.LoginState;
+import com.example.lianqy.doubleduck_android.model.Saler;
 import com.example.lianqy.doubleduck_android.service.LoginService;
-import com.example.lianqy.doubleduck_android.ui.ManageDishes.ManageDishesActivity;
 import com.example.lianqy.doubleduck_android.ui.Transfer.TransferActivity;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -63,8 +67,8 @@ public class LoginActivity extends AppCompatActivity {
         String acc = account_text.getText().toString();
         String pass = password_text.getText().toString();
 
-        /*Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.18.218.192:9090/v1/salers/")
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://172.18.218.192:9090/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         LoginService service = retrofit.create(LoginService.class);
@@ -75,23 +79,28 @@ public class LoginActivity extends AppCompatActivity {
         if (pass.isEmpty() && !acc.isEmpty()) {
             Toast.makeText(getApplicationContext(), "密码不能为空", Toast.LENGTH_SHORT).show();
         }
-        if (acc.equals("123") && pass.equals("123")) {
-            //Toast.makeText(getApplicationContext(), "登陆成功", Toast.LENGTH_SHORT).show();
 
-            //从服务器获取是否账号密码匹配
-            //跳转到菜品管理页面
-            //测试直接点击登录跳转到管理界面
-            Intent intent = new Intent();
-            intent.setClass(LoginActivity.this, ManageDishesActivity.class);
-            startActivity(intent);
-            finish();
-        }*/
+        if (!acc.isEmpty() && !pass.isEmpty()) {
+            Call<LoginState> loginCall = service.getLoginState(new Saler(acc, pass, "none"));
+            loginCall.enqueue(new Callback<LoginState>() {
+                @Override
+                public void onResponse(Call<LoginState> call, Response<LoginState> response) {
+                    LoginState state = response.body();
+                    if (state.getState().equals("OK")) {
+                        Intent intent = new Intent();
+                        intent.setClass(LoginActivity.this, TransferActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "密码错误", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
+                @Override
+                public void onFailure(Call<LoginState> call, Throwable t) {
 
-        //直接点击登录跳转到中转界面
-        Intent intent = new Intent();
-        intent.setClass(LoginActivity.this, TransferActivity.class);
-        startActivity(intent);
-        finish();
+                }
+            });
+        }
     }
 }
