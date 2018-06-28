@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.lianqy.doubleduck_android">
 
+    <!--往sdcard中写入数据的权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!--在sdcard中读取文件的权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo1"
@@ -18,6 +23,7 @@
         </activity>
         <activity android:name=".ui.Login.RegisterActivity"/>
         <activity android:name=".ui.ManageDishes.ManageDishesActivity"/>
+        <activity android:name=".ui.Transfer.TransferActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

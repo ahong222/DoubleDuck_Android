@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.example.lianqy.doubleduck_android.R;
 import com.example.lianqy.doubleduck_android.service.LoginService;
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.ManageDishesActivity;
+import com.example.lianqy.doubleduck_android.ui.Transfer.TransferActivity;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -22,27 +23,27 @@ public class LoginActivity extends AppCompatActivity {
     public EditText account_text;
     public EditText password_text;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        init();
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            init();
 
-        register_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                register();
-            }
-        });
+            register_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    register();
+                }
+            });
 
-        login_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                login();
-            }
-        });
+            login_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    login();
+                }
+            });
     }
-
     public void init() {
         register_btn = findViewById(R.id.register);
         login_btn = findViewById(R.id.login);
@@ -87,9 +88,9 @@ public class LoginActivity extends AppCompatActivity {
         }*/
 
 
-        //直接点击登录跳转到管理界面
+        //直接点击登录跳转到中转界面
         Intent intent = new Intent();
-        intent.setClass(LoginActivity.this, ManageDishesActivity.class);
+        intent.setClass(LoginActivity.this, TransferActivity.class);
         startActivity(intent);
         finish();
     }

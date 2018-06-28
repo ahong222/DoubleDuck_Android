@@ -31,6 +31,7 @@ import com.example.lianqy.doubleduck_android.util.BitmapUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.DeflaterInputStream;
 
 public class ManageDishesActivity extends AppCompatActivity{
 
@@ -46,6 +47,9 @@ public class ManageDishesActivity extends AppCompatActivity{
     private List<Dish> mDishList = new ArrayList<>();
     private FloatingActionButton addTypeBtn, addDishBtn;
 
+    //记录最后一次点击的dish/type rv的位置
+    private int dishPos = 0, typePos = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,19 +59,21 @@ public class ManageDishesActivity extends AppCompatActivity{
         setViews();
         setClick();
         setTypeList();
-        setDishist();
+        setDishist(mDishList);
     }
 
-    private void setDishist() {
+    private void setDishist(final List<Dish> dishist) {
         dishRV.setLayoutManager(new LinearLayoutManager(this));
-        mManageDishAdapter = new ManageDishAdapter(mDishList, null);
+        mManageDishAdapter = new ManageDishAdapter(dishist, null);
 
         //点击事件
         mManageDishAdapter.setOnItemClickListener(new ManageDishAdapter.OnItemClickListener() {
             @Override
             public void onClick(final int position) {
 
-                final Dish d = mDishList.get(position);
+                dishPos = position;
+                final Dish d = dishist.get(position);
+                byteArray = null;
 
                 //短按查看dish详情，并且可以修改
                 //对话框
@@ -81,7 +87,12 @@ public class ManageDishesActivity extends AppCompatActivity{
                         d.setDes(dialog.getDes());
                         d.setSrc(byteArray == null ? d.getSrc() : byteArray);
 
-                        mDishList.set(position, d);
+                        dishist.set(position, d);
+                        //设置mDishList的同时，要修改库里（服务器）的List
+                        //还要修改相应的type的list<Dish>
+                        Type t = mTypeList.get(typePos);
+                        t.setDishes(dishist);
+                        mTypeList.set(typePos, t);
                         dishRV.getAdapter().notifyItemChanged(position);
                         dialog.dismiss();
                     }
@@ -99,9 +110,18 @@ public class ManageDishesActivity extends AppCompatActivity{
                         //有一个问题就是点击该图片origin之后打开相册选择图片new
                         //如果将origin赋值为图片New,会出现闪退的情况
                         //但是注销此句（即不将new赋值），点击更改后adapter会更新dish的图片为new
-                        //icon.setImageBitmap(BitmapUtil.byteArrayToBitmap(byteArray));
+                        ImageView icon = dialog.getView().findViewById(R.id.fetchPic);
+                        icon.setImageBitmap(BitmapUtil.byteArrayToBitmap(byteArray == null ? d.getSrc() : byteArray));
 
-                        Toast.makeText(getApplicationContext(), "点击了相册", Toast.LENGTH_SHORT).show();
+                        d.setSrc(byteArray == null ? d.getSrc() : byteArray);
+
+                        dishist.set(position, d);
+                        //设置mDishList的同时，要修改库里（服务器）的List
+                        //还要修改相应的type的list<Dish>
+                        Type t = mTypeList.get(typePos);
+                        t.setDishes(dishist);
+                        mTypeList.set(typePos, t);
+                        dishRV.getAdapter().notifyItemChanged(position);
                     }
                 });
 
@@ -126,11 +146,20 @@ public class ManageDishesActivity extends AppCompatActivity{
         mManageTypeAdapter.setOnItemClickListener(new ManageTypeAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
+                typePos = position;
+
                 //短按右侧的recyclerview显示该类的dishes
                 //默认显示第一个类标的dishes
+                /*
                 mDishList = mTypeList.get(position).getDishes();
                 mManageDishAdapter = new ManageDishAdapter(mDishList, null);
                 dishRV.setAdapter(mManageDishAdapter);
+                */
+                mDishList = mTypeList.get(position).getDishes();
+                if(mDishList == null){
+                    mDishList = new ArrayList<>();
+                }
+                setDishist(mDishList);
             }
 
             @Override
@@ -180,9 +209,11 @@ public class ManageDishesActivity extends AppCompatActivity{
                     @Override
                     public void doResetOrSure() {
                         //按下确定键增加新的dish
-                        Dish d = new Dish(dialog.getName(), dialog.getPrice(), "t1", dialog.getDes(), dialog.getSrc());
+                        String tName = mTypeList.get(typePos).getType();
+                        Dish d = new Dish(dialog.getName(), dialog.getPrice(), tName, dialog.getDes(), dialog.getSrc());
 
                         mDishList.add(d);
+                        mTypeList.get(typePos).setDishes(mDishList);
                         dishRV.getAdapter().notifyItemInserted(mDishList.size()-1);
                         dialog.dismiss();
                     }
@@ -243,7 +274,7 @@ public class ManageDishesActivity extends AppCompatActivity{
         ArrayList<Dish> dishes2 = new ArrayList<>();
         ArrayList<Dish> dishes3 = new ArrayList<>();
 
-        Bitmap bitmap = BitmapFactory.decodeResource(ManageDishesActivity.this.getResources(), R.drawable.ic_password);
+        Bitmap bitmap = BitmapFactory.decodeResource(ManageDishesActivity.this.getResources(), R.drawable.ic_happy_64);
         byte[] array = BitmapUtil.bitmapToByteArray(bitmap);
         for (int i = 0; i < 10; i++) {
             Dish d = new Dish("t1 " + Integer.toString(i), "¥ " + Integer.toString(i * 2),
@@ -276,6 +307,12 @@ public class ManageDishesActivity extends AppCompatActivity{
         mTypeList.add(type2);
         mTypeList.add(type3);
 
+    }
+
+    //点击返回键结束该activity
+    @Override
+    public void onBackPressed(){
+        finish();
     }
 
     @Override

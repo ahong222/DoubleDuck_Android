@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.ParcelUuid;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import android.widget.TextView;
 
 import com.example.lianqy.doubleduck_android.R;
 import com.example.lianqy.doubleduck_android.model.Dish;
-import com.example.lianqy.doubleduck_android.ui.ManageDishes.ManageDishesActivity;
 import com.example.lianqy.doubleduck_android.util.BitmapUtil;
 
 public class DishShortClickDialog extends Dialog {
@@ -25,7 +25,7 @@ public class DishShortClickDialog extends Dialog {
     private ClickListenerInterface mClickListenerInterface;
     private Dish mDish;
     View view;
-    ImageView icon;
+    ImageView fetchPic;
     EditText name;
     EditText price;
     EditText des;
@@ -54,7 +54,7 @@ public class DishShortClickDialog extends Dialog {
     }
 
     public byte[] getSrc(){
-        return BitmapUtil.drawableToByteArray(icon.getDrawable());
+        return BitmapUtil.drawableToByteArray(fetchPic.getDrawable());
     }
 
     public String getName(){
@@ -69,13 +69,17 @@ public class DishShortClickDialog extends Dialog {
         return des.getText().toString();
     }
 
+    public View getView(){
+        return view;
+    }
+
     //初始化 自定义的 dialog 组件
     private void init() {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         view = inflater.inflate(R.layout.dish_short_click_dialog, null, false);
         setContentView(view);
 
-        icon = view.findViewById(R.id.fetchPic);
+        fetchPic = view.findViewById(R.id.fetchPic);
         name = view.findViewById(R.id.name);
         price = view.findViewById(R.id.price);
         des = view.findViewById(R.id.des);
@@ -92,6 +96,7 @@ public class DishShortClickDialog extends Dialog {
 
         cancel.setOnClickListener(new clickListener());
         reset.setOnClickListener(new clickListener());
+        fetchPic.setOnClickListener(new clickListener());
 
         setDialogAttributes();
 
@@ -110,14 +115,14 @@ public class DishShortClickDialog extends Dialog {
 
     private void setDefault() {
         Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_add_64);
-        icon.setImageBitmap(bitmap);
+        fetchPic.setImageBitmap(bitmap);
 
         //将更改text改成确定
         reset.setText("确定");
     }
 
     private void setStringsForEditTexts() {
-        icon.setImageBitmap(BitmapUtil.byteArrayToBitmap(mDish.getSrc()));
+        fetchPic.setImageBitmap(BitmapUtil.byteArrayToBitmap(mDish.getSrc()));
         name.setText(mDish.getName());
         price.setText(mDish.getPrice());
         des.setText(mDish.getDes());
