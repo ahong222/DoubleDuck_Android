@@ -309,6 +309,12 @@ public class ManageDishesActivity extends AppCompatActivity{
 
     }
 
+    //点击返回键结束该activity
+    @Override
+    public void onBackPressed(){
+        finish();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

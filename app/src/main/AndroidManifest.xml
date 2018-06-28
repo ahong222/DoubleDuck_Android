@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".ui.Login.RegisterActivity"/>
         <activity android:name=".ui.ManageDishes.ManageDishesActivity"/>
+        <activity android:name=".ui.Transfer.TransferActivity"/>
     </application>
 
 </manifest>

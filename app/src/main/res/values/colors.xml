@@ -9,4 +9,7 @@
     <color name="cadetBlue">#8896B3</color>
     <color name="lightSteelBlue">#ABB5CA</color>
     <color name="darkGrayForText">#B0B0B0</color>
+    <color name="darkSlateGray">#333A44</color>
+
+    <color name="silver">#BDBDBD</color>
 </resources>
