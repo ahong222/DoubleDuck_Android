@@ -46,7 +46,7 @@ public class TypeLongClickDialog extends Dialog {
 
     private void init() {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        view = inflater.inflate(R.layout.type_long_click_dialog, null, false);
+        view = inflater.inflate(R.layout.dialog_type_long_click, null, false);
         setContentView(view);
 
         typeName = view.findViewById(R.id.editTypeName);

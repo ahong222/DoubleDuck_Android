@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="93dp"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical">
 
     <LinearLayout
@@ -32,7 +33,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="12dp"
-                    android:hint="炙烤双鸭"
+                    tools:text="炙烤双鸭"
                     android:textSize="20sp"
                     android:textColor="@color/cadetBlue"
                     android:maxLines="1"
@@ -43,7 +44,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:hint="28.00"
+                    tools:text="28.00"
                     android:textSize="16sp"
                     android:textColor="@color/darkGrayForText"
                     android:maxLines="1"
@@ -55,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:hint="我是啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦"
+                tools:text="我是啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦"
                 android:textSize="12sp"
                 android:textColor="@color/darkGrayForText"
                 android:maxLines="2"

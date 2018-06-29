@@ -1,4 +1,4 @@
-package com.example.lianqy.doubleduck_android.ui.ManageDishes.adapter;
+package com.example.lianqy.doubleduck_android.ui.Order.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,22 +7,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.lianqy.doubleduck_android.R;
-import com.example.lianqy.doubleduck_android.model.Type;
+import com.example.lianqy.doubleduck_android.model.Order;
 
 import java.util.List;
 
-public class ManageTypeAdapter extends RecyclerView.Adapter<ManageTypeAdapter.ViewHolder> implements View.OnClickListener {
+public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> implements View.OnClickListener {
 
-    private ManageTypeAdapter.OnItemClickListener mOnItemClickListener;
-    private List<Type> mTypes;
-    private ManageTypeAdapter.MyItemClickListener mMyItemClickListener;
+    private OrderAdapter.OnItemClickListener mOnItemClickListener;
+    private List<Order> mOrders;
+    private OrderAdapter.MyItemClickListener mMyItemClickListener;
 
     public interface MyItemClickListener {
         public void clickListener(View v);
     }
 
-    public ManageTypeAdapter(List<Type> typeList, MyItemClickListener listener){
-        mTypes = typeList;
+    public OrderAdapter(List<Order> orderList, MyItemClickListener listener){
+        mOrders = orderList;
         mMyItemClickListener = listener;
     }
 
@@ -34,16 +34,18 @@ public class ManageTypeAdapter extends RecyclerView.Adapter<ManageTypeAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_manage_type, parent, false);
+                .inflate(R.layout.item_order, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        Type type = mTypes.get(position);
+    public void onBindViewHolder(OrderAdapter.ViewHolder holder, final int position) {
+        Order order = mOrders.get(position);
 
-        holder.typeName.setText(type.getType());
+        holder.orderNum.setText(String.valueOf(order.getOrderNum()));
+        holder.orderAmount.setText(String.valueOf(order.getAmount()));
+        holder.orderState.setText(String.valueOf(order.getState()));
 
         if(mOnItemClickListener != null){
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +67,7 @@ public class ManageTypeAdapter extends RecyclerView.Adapter<ManageTypeAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return mTypes == null ? 0 : mTypes.size();
+        return mOrders == null ? 0 : mOrders.size();
     }
 
 
@@ -74,18 +76,20 @@ public class ManageTypeAdapter extends RecyclerView.Adapter<ManageTypeAdapter.Vi
         mMyItemClickListener.clickListener(v);
     }
 
-    public void setOnItemClickListener(ManageTypeAdapter.OnItemClickListener onItemClickListener){
+    public void setOnItemClickListener(OrderAdapter.OnItemClickListener onItemClickListener){
         this.mOnItemClickListener = onItemClickListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView typeName;
+        private TextView orderNum, orderAmount, orderState;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            typeName = itemView.findViewById(R.id.type);
+            orderNum = itemView.findViewById(R.id.orderNum);
+            orderAmount = itemView.findViewById(R.id.total);
+            orderState = itemView.findViewById(R.id.state);
         }
     }
 }
