@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.ParcelUuid;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +52,11 @@ public class DishShortClickDialog extends Dialog {
         init();
     }
 
+
+    public void setSrc(byte[] array) {
+        fetchPic.setImageBitmap(BitmapUtil.byteArrayToBitmap(array));
+    }
+
     public byte[] getSrc(){
         return BitmapUtil.drawableToByteArray(fetchPic.getDrawable());
     }
@@ -76,7 +80,7 @@ public class DishShortClickDialog extends Dialog {
     //初始化 自定义的 dialog 组件
     private void init() {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        view = inflater.inflate(R.layout.dish_short_click_dialog, null, false);
+        view = inflater.inflate(R.layout.dialog_dish_short_click, null, false);
         setContentView(view);
 
         fetchPic = view.findViewById(R.id.fetchPic);

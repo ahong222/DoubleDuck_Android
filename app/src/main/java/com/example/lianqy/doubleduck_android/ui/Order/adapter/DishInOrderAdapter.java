@@ -1,28 +1,30 @@
-package com.example.lianqy.doubleduck_android.ui.ManageDishes.adapter;
+package com.example.lianqy.doubleduck_android.ui.Order.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.lianqy.doubleduck_android.R;
-import com.example.lianqy.doubleduck_android.model.Type;
+import com.example.lianqy.doubleduck_android.model.Dish;
+import com.example.lianqy.doubleduck_android.util.BitmapUtil;
 
 import java.util.List;
 
-public class ManageTypeAdapter extends RecyclerView.Adapter<ManageTypeAdapter.ViewHolder> implements View.OnClickListener {
+public class DishInOrderAdapter extends RecyclerView.Adapter<DishInOrderAdapter.ViewHolder> implements View.OnClickListener {
 
-    private ManageTypeAdapter.OnItemClickListener mOnItemClickListener;
-    private List<Type> mTypes;
-    private ManageTypeAdapter.MyItemClickListener mMyItemClickListener;
+    private DishInOrderAdapter.OnItemClickListener mOnItemClickListener;
+    private List<Dish> mDishes;
+    private DishInOrderAdapter.MyItemClickListener mMyItemClickListener;
 
     public interface MyItemClickListener {
         public void clickListener(View v);
     }
 
-    public ManageTypeAdapter(List<Type> typeList, MyItemClickListener listener){
-        mTypes = typeList;
+    public DishInOrderAdapter(List<Dish> dishList, MyItemClickListener listener){
+        mDishes = dishList;
         mMyItemClickListener = listener;
     }
 
@@ -34,16 +36,19 @@ public class ManageTypeAdapter extends RecyclerView.Adapter<ManageTypeAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_manage_type, parent, false);
+                .inflate(R.layout.item_dish_in_order, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        Type type = mTypes.get(position);
+    public void onBindViewHolder(DishInOrderAdapter.ViewHolder holder, final int position) {
+        Dish dish = mDishes.get(position);
 
-        holder.typeName.setText(type.getType());
+        holder.icon.setImageBitmap(BitmapUtil.byteArrayToBitmap(dish.getSrc()));
+        holder.name.setText(dish.getName());
+        holder.price.setText(dish.getPrice());
+        holder.copy.setText(String.valueOf(dish.getCopy()));
 
         if(mOnItemClickListener != null){
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +70,7 @@ public class ManageTypeAdapter extends RecyclerView.Adapter<ManageTypeAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return mTypes == null ? 0 : mTypes.size();
+        return mDishes == null ? 0 : mDishes.size();
     }
 
 
@@ -74,18 +79,22 @@ public class ManageTypeAdapter extends RecyclerView.Adapter<ManageTypeAdapter.Vi
         mMyItemClickListener.clickListener(v);
     }
 
-    public void setOnItemClickListener(ManageTypeAdapter.OnItemClickListener onItemClickListener){
+    public void setOnItemClickListener(DishInOrderAdapter.OnItemClickListener onItemClickListener){
         this.mOnItemClickListener = onItemClickListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView typeName;
+        private ImageView icon;
+        private TextView name, price, copy;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            typeName = itemView.findViewById(R.id.type);
+            icon = itemView.findViewById(R.id.img);
+            name = itemView.findViewById(R.id.dishName);
+            price = itemView.findViewById(R.id.price);
+            copy = itemView.findViewById(R.id.copy);
         }
     }
 }

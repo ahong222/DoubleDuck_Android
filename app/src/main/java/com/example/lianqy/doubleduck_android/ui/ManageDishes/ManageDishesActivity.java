@@ -105,8 +105,8 @@ public class ManageDishesActivity extends AppCompatActivity{
                     @Override
                     public void doFetchPhoto() {
                         //点击icon直接转到手机相册界面选取图片作为菜品的新icon
-                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent, RESULT);
+                        doCallFetchPic();
+
                         //有一个问题就是点击该图片origin之后打开相册选择图片new
                         //如果将origin赋值为图片New,会出现闪退的情况
                         //但是注销此句（即不将new赋值），点击更改后adapter会更新dish的图片为new
@@ -210,7 +210,11 @@ public class ManageDishesActivity extends AppCompatActivity{
                     public void doResetOrSure() {
                         //按下确定键增加新的dish
                         String tName = mTypeList.get(typePos).getType();
-                        Dish d = new Dish(dialog.getName(), dialog.getPrice(), tName, dialog.getDes(), dialog.getSrc());
+
+                        byte[] defaultByteArray = BitmapUtil.getDefaultByteArray(ManageDishesActivity.this);
+                        byteArray = byteArray == null ? defaultByteArray : byteArray;
+
+                        Dish d = new Dish(dialog.getName(), dialog.getPrice(), tName, dialog.getDes(), byteArray, 0);
 
                         mDishList.add(d);
                         mTypeList.get(typePos).setDishes(mDishList);
@@ -225,7 +229,15 @@ public class ManageDishesActivity extends AppCompatActivity{
 
                     @Override
                     public void doFetchPhoto() {
+                        byteArray = null;
+                        //点击icon直接转到手机相册界面选取图片作为菜品的新icon
+                        doCallFetchPic();
 
+                        byte[] defaultByteArray = BitmapUtil.getDefaultByteArray(ManageDishesActivity.this);
+                        byteArray = byteArray == null ? defaultByteArray : byteArray;
+
+                        byteArray = byteArray == null ? defaultByteArray : byteArray;
+                        dialog.setSrc(byteArray);
                     }
                 });
             }
@@ -259,6 +271,11 @@ public class ManageDishesActivity extends AppCompatActivity{
                 });
             }
         });
+    }
+
+    private void doCallFetchPic() {
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, RESULT);
     }
 
     private void setViews() {

@@ -1,10 +1,14 @@
 package com.example.lianqy.doubleduck_android.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+
+import com.example.lianqy.doubleduck_android.R;
+import com.example.lianqy.doubleduck_android.ui.ManageDishes.ManageDishesActivity;
 
 import java.io.ByteArrayOutputStream;
 
@@ -50,4 +54,13 @@ public class BitmapUtil {
 
     }
 
+    public static byte[] getDefaultByteArray(Context context) {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_add_64);
+        return bitmapToByteArray(bitmap);
+    }
+
+    public static byte[] getDefaultLogoByteArray(Context context) {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo1);
+        return bitmapToByteArray(bitmap);
+    }
 }

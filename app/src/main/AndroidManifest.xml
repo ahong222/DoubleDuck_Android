@@ -24,6 +24,9 @@
         <activity android:name=".ui.Login.RegisterActivity"/>
         <activity android:name=".ui.ManageDishes.ManageDishesActivity"/>
         <activity android:name=".ui.Transfer.TransferActivity"/>
+        <activity android:name=".ui.Order.OrderListActivity"/>
+        <activity android:name=".ui.Order.OrderDetailActivity"/>
+        <activity android:name=".ui.RetaurantDetail.RestaurantDetailActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>
