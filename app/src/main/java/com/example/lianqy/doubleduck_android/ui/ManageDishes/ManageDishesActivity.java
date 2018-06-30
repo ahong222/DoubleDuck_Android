@@ -289,40 +289,62 @@ public class ManageDishesActivity extends AppCompatActivity{
     private void initTestData() {
         ArrayList<Dish> dishes1 = new ArrayList<>();
         ArrayList<Dish> dishes2 = new ArrayList<>();
-        ArrayList<Dish> dishes3 = new ArrayList<>();
+        //ArrayList<Dish> dishes3 = new ArrayList<>();
 
-        Bitmap bitmap = BitmapFactory.decodeResource(ManageDishesActivity.this.getResources(), R.drawable.ic_happy_64);
-        byte[] array = BitmapUtil.bitmapToByteArray(bitmap);
-        for (int i = 0; i < 10; i++) {
+        Bitmap bitmap1 = BitmapFactory.decodeResource(ManageDishesActivity.this.getResources(), R.drawable.kao_ya_bo);
+        byte[] array1 = BitmapUtil.bitmapToByteArray(bitmap1);
+        Dish d11 = new Dish("烤鸭脖", "¥14", "1","美味鸭脖！！！", array1);
+        dishes1.add(d11);
+
+        Bitmap bitmap2 = BitmapFactory.decodeResource(ManageDishesActivity.this.getResources(), R.drawable.kao_ya_chi);
+        byte[] array2 = BitmapUtil.bitmapToByteArray(bitmap2);
+        Dish d12 = new Dish("烤鸭翅", "¥13", "1","美味鸭翅！！！", array2);
+        dishes1.add(d12);
+
+        Bitmap bitmap3 = BitmapFactory.decodeResource(ManageDishesActivity.this.getResources(), R.drawable.kao_ya_tui);
+        byte[] array3 = BitmapUtil.bitmapToByteArray(bitmap3);
+        Dish d13 = new Dish("烤鸭腿", "¥12", "1","美味鸭腿！！！", array3);
+        dishes1.add(d13);
+
+        Bitmap bitmap4 = BitmapFactory.decodeResource(ManageDishesActivity.this.getResources(), R.drawable.bing_ke_le);
+        byte[] array4 = BitmapUtil.bitmapToByteArray(bitmap4);
+        Dish d21 = new Dish("冰可乐", "¥3", "2","透心凉！心飞扬", array4);
+        dishes2.add(d21);
+
+        Bitmap bitmap5 = BitmapFactory.decodeResource(ManageDishesActivity.this.getResources(), R.drawable.bing_xue_bi);
+        byte[] array5 = BitmapUtil.bitmapToByteArray(bitmap5);
+        Dish d22 = new Dish("冰雪碧", "¥3", "2","透心凉！还加了膳食纤维哦~", array5);
+        dishes2.add(d22);
+        /*for (int i = 0; i < 10; i++) {
             Dish d = new Dish("t1 " + Integer.toString(i), "¥ " + Integer.toString(i * 2),
                     Integer.toString(i / 10 + 1), "i am dish " + Integer.toString(i) + "哈哈哈哈啊啊哈哈哈哈哈啊啊哈",
                     array);
 
             dishes1.add(d);
-        }
-        for (int i = 0; i < 10; i++) {
+        }*/
+        /*for (int i = 0; i < 10; i++) {
             Dish d = new Dish("t2 " + Integer.toString(i), "¥ " + Integer.toString(i * 2),
                     Integer.toString(i / 10 + 1), "i am dish " + Integer.toString(i) + "哈哈哈哈啊啊哈哈哈哈哈啊啊哈",
                     array);
 
             dishes2.add(d);
-        }
-        for (int i = 0; i < 10; i++) {
-            Dish d = new Dish("t3 " + Integer.toString(i), "¥ " + Integer.toString(i * 2),
-                    Integer.toString(i / 10 + 1), "i am dish " + Integer.toString(i) + "哈哈哈哈啊啊哈哈哈哈哈啊啊哈",
-                    array);
+        }*/
+        //for (int i = 0; i < 10; i++) {
+            //Dish d = new Dish("t3 " + Integer.toString(i), "¥ " + Integer.toString(i * 2),
+                    //Integer.toString(i / 10 + 1), "i am dish " + Integer.toString(i) + "哈哈哈哈啊啊哈哈哈哈哈啊啊哈",
+                    //array);
 
-            dishes3.add(d);
-        }
+            //dishes3.add(d);
+       // }
 
         mDishList = dishes1;
 
         Type type1 = new Type("烧烤类", dishes1);
-        Type type2 = new Type("盐焗类", dishes2);
-        Type type3 = new Type("油炸类", dishes3);
+        Type type2 = new Type("饮料类", dishes2);
+        //Type type3 = new Type("油炸类", dishes3);
         mTypeList.add(type1);
         mTypeList.add(type2);
-        mTypeList.add(type3);
+        //mTypeList.add(type3);
 
     }
 

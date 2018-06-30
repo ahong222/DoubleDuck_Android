@@ -68,6 +68,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         deskNum.setText(String.valueOf(order.getDeskNum()));
         state.setText(String.valueOf(order.getState()));
         ///....amount赋值
+        amount.setText("￥15");
     }
 
     private void initTestList() {

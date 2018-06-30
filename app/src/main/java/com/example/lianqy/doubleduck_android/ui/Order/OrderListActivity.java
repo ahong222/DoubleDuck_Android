@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import com.example.lianqy.doubleduck_android.R;
 import com.example.lianqy.doubleduck_android.model.Dish;
 import com.example.lianqy.doubleduck_android.model.Order;
+import com.example.lianqy.doubleduck_android.ui.ManageDishes.ManageDishesActivity;
 import com.example.lianqy.doubleduck_android.ui.Order.adapter.OrderAdapter;
 import com.example.lianqy.doubleduck_android.util.BitmapUtil;
 
@@ -67,24 +68,32 @@ public class OrderListActivity extends AppCompatActivity {
     private void initTestOrderListData() {
         ArrayList<Dish> dishes = new ArrayList<>();
 
-        Bitmap bitmap = BitmapFactory.decodeResource(OrderListActivity.this.getResources(), R.drawable.ic_happy_64);
-        byte[] array = BitmapUtil.bitmapToByteArray(bitmap);
-        for (int i = 0; i < 5; i++) {
+        Bitmap bitmap3 = BitmapFactory.decodeResource(OrderListActivity.this.getResources(), R.drawable.kao_ya_tui);
+        byte[] array3 = BitmapUtil.bitmapToByteArray(bitmap3);
+        Dish d13 = new Dish("烤鸭腿", "¥12", "1","美味鸭腿！！！", array3);
+        dishes.add(d13);
+        /*for (int i = 0; i < 5; i++) {
             Dish d = new Dish("t1 " + Integer.toString(i), "¥ " + Integer.toString(i * 2),
                     Integer.toString(i / 10 + 1), "i am dish " + Integer.toString(i) + "哈哈哈哈啊啊哈哈哈哈哈啊啊哈",
                     array, 5);
 
             dishes.add(d);
-        }
-        Order o1 = new Order(1, 1, dishes, 50, 1);
-        dishes.remove(dishes.size()-1);
-        Order o2 = new Order(2, 1, dishes, 52, 2);
-        dishes.remove(dishes.size()-1);
-        Order o3 = new Order(3, 1, dishes, 54, 3);
+        }8*/
+
+        Bitmap bitmap4 = BitmapFactory.decodeResource(OrderListActivity.this.getResources(), R.drawable.bing_ke_le);
+        byte[] array4 = BitmapUtil.bitmapToByteArray(bitmap4);
+        Dish d21 = new Dish("冰可乐", "¥3", "2","透心凉！心飞扬", array4);
+        dishes.add(d21);
+
+        Order o1 = new Order(1, 1, dishes, 15, 1);
+        //dishes.remove(dishes.size()-1);
+        //Order o2 = new Order(2, 1, dishes, 52, 2);
+        //dishes.remove(dishes.size()-1);
+        //Order o3 = new Order(3, 1, dishes, 54, 3);
 
         mOrders.add(o1);
-        mOrders.add(o2);
-        mOrders.add(o3);
+        //mOrders.add(o2);
+        //mOrders.add(o3);
     }
 
     //点击返回键结束该activity
