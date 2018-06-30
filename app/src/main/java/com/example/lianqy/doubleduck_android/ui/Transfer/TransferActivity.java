@@ -11,6 +11,7 @@ import com.example.lianqy.doubleduck_android.R;
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.ManageDishesActivity;
 import com.example.lianqy.doubleduck_android.ui.Order.OrderListActivity;
 import com.example.lianqy.doubleduck_android.ui.RetaurantDetail.RestaurantDetailActivity;
+import com.example.lianqy.doubleduck_android.ui.Statistics.ResStatisticsActivity;
 import com.example.lianqy.doubleduck_android.ui.Transfer.bus.ChangeSalerInfoBusEvent;
 import com.example.lianqy.doubleduck_android.util.BitmapUtil;
 
@@ -69,6 +70,17 @@ public class TransferActivity extends AppCompatActivity {
                 //跳转到商家详情界面
                 Intent intent = new Intent();
                 intent.setClass(TransferActivity.this, RestaurantDetailActivity.class);
+                //此处intent要传入商家的信息参数
+                startActivity(intent);
+            }
+        });
+
+        businessStatisticsCV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到统计界面
+                Intent intent = new Intent();
+                intent.setClass(TransferActivity.this, ResStatisticsActivity.class);
                 //此处intent要传入商家的信息参数
                 startActivity(intent);
             }

@@ -27,6 +27,7 @@
         <activity android:name=".ui.Order.OrderListActivity"/>
         <activity android:name=".ui.Order.OrderDetailActivity"/>
         <activity android:name=".ui.RetaurantDetail.RestaurantDetailActivity"/>
+        <activity android:name=".ui.Statistics.ResStatisticsActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>
