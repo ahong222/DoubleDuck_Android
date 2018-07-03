@@ -1,8 +1,9 @@
 package com.example.lianqy.doubleduck_android.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Type {
+public class Type implements Serializable {
     private String type;
     private List<Dish> dishes;
 
