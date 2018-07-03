@@ -91,8 +91,10 @@ public class LoginActivity extends AppCompatActivity {
                         intent.setClass(LoginActivity.this, TransferActivity.class);
                         startActivity(intent);
                         finish();
-                    } else {
+                    } else if (state.getState().equals("Fail")){
                         Toast.makeText(getApplicationContext(), "密码错误", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "该用户不存在", Toast.LENGTH_SHORT).show();
                     }
                 }
 
