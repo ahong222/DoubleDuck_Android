@@ -68,7 +68,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private void changeRestaurntInfo() {
         String resName = name.getText().toString();
-        String resDes = name.getText().toString();
+        String resDes = des.getText().toString();
         //还有一个Logo
         //然后有一个商家类
         //设置那个商家的内容

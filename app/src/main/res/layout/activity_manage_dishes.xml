@@ -1,69 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/activity_manage_dishes"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-    <LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
+        app:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar">
+    </android.support.v7.widget.Toolbar>
 
-        <RelativeLayout
-            android:layout_weight="3"
-            android:layout_width="0dp"
-            android:layout_height="match_parent">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/typeListRV"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/addTypeFloatingBtn"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                app:borderWidth="0dp"
-                app:pressedTranslationZ="16dp"
-                android:src="@drawable/ic_add_64"
-                app:backgroundTint="#B4CDCD"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="16dp"/>
+        <include
+            android:id="@+id/content_frame"
+            layout="@layout/fragment_manage_dishes" />
 
-        </RelativeLayout>
 
-        <View
-            android:layout_width="2dp"
+        <ListView
+            android:id="@+id/left_fragment"
+            android:layout_width="180dp"
+            android:layout_gravity="start"
             android:layout_height="match_parent"
-            android:background="@color/darkGrayForDivider"/>
+            android:choiceMode="singleChoice"
+            android:divider="@color/darkGrayForDivider"
+            android:dividerHeight="0dp"
+            android:background="@android:color/white"
+            android:scrollbars="none"/>
 
 
-        <RelativeLayout
-            android:id="@+id/parentw"
-            android:layout_weight="7"
-            android:layout_width="0dp"
-            android:layout_height="match_parent">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/dishListRV"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+    </android.support.v4.widget.DrawerLayout>
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/addDishFloatingBtn"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                app:borderWidth="0dp"
-                app:pressedTranslationZ="16dp"
-                android:src="@drawable/ic_add_64"
-                app:backgroundTint="@color/cadetBlue"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="16dp"/>
-
-        </RelativeLayout>
-
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>
