@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,13 +26,22 @@ import android.widget.ListView;
 
 import com.example.lianqy.doubleduck_android.R;
 import com.example.lianqy.doubleduck_android.model.Dish;
+import com.example.lianqy.doubleduck_android.model.LoginState;
 import com.example.lianqy.doubleduck_android.model.Type;
+import com.example.lianqy.doubleduck_android.model.postcate;
+import com.example.lianqy.doubleduck_android.service.LoginService;
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.adapter.DrawerAdapter;
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.dialog.TypeLongClickDialog;
 import com.example.lianqy.doubleduck_android.util.BitmapUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ManageDishesActivity extends AppCompatActivity{
     private Toolbar mToolbar;
@@ -246,6 +256,7 @@ public class ManageDishesActivity extends AppCompatActivity{
                      //确定增加新的种类
                      Type t = new Type(dialog.getTypeName(), null);
                      mTypeList.add(t);
+                     uploadcate(t);
                      resetAdapter();
 
                      dialog.dismiss();
@@ -255,6 +266,30 @@ public class ManageDishesActivity extends AppCompatActivity{
          }
 
          return super.onOptionsItemSelected(item);
+     }
+
+     //上传菜品种类
+     private void uploadcate(Type t) {
+         Retrofit retrofit = new Retrofit.Builder()
+                 .baseUrl("http://172.18.218.192:9090/")
+                 .addConverterFactory(GsonConverterFactory.create())
+                 .build();
+         LoginService service = retrofit.create(LoginService.class);
+         Call<LoginState> upcate = service.Postcate(new postcate("RT1", t.getType()));
+         upcate.enqueue(new Callback<LoginState>() {
+             @Override
+             public void onResponse(Call<LoginState> call, Response<LoginState> response) {
+                 LoginState temp = response.body();
+                 if (temp.getState().equals("createCateSuccess")) {
+                     Log.d("output", "成功创建上传");
+                 }
+             }
+
+             @Override
+             public void onFailure(Call<LoginState> call, Throwable t) {
+
+             }
+         });
      }
 
 
