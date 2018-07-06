@@ -8,16 +8,26 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.lianqy.doubleduck_android.R;
+import com.example.lianqy.doubleduck_android.model.LoginState;
+import com.example.lianqy.doubleduck_android.model.Rtinfo;
+import com.example.lianqy.doubleduck_android.service.LoginService;
 import com.example.lianqy.doubleduck_android.ui.Transfer.bus.ChangeSalerInfoBusEvent;
 import com.example.lianqy.doubleduck_android.util.BitmapUtil;
 
 import org.greenrobot.eventbus.EventBus;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestaurantDetailActivity extends AppCompatActivity {
 
@@ -69,6 +79,28 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void changeRestaurntInfo() {
         String resName = name.getText().toString();
         String resDes = des.getText().toString();
+
+        //更新服务器的饭店信息
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://172.18.218.192:9090/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        LoginService service = retrofit.create(LoginService.class);
+        Call<LoginState> postRtinfo = service.Postrt(new Rtinfo("RT1", resDes, "sysu", "131", "url"));
+        postRtinfo.enqueue(new Callback<LoginState>() {
+            @Override
+            public void onResponse(Call<LoginState> call, Response<LoginState> response) {
+                LoginState temp = response.body();
+                if (temp.getState().equals("UploadRTInfoSuccess")) {
+                    Log.d("output", "更新饭店信息成功");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginState> call, Throwable t) {
+
+            }
+        });
         //还有一个Logo
         //然后有一个商家类
         //设置那个商家的内容

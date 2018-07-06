@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +20,22 @@ import android.widget.ImageView;
 
 import com.example.lianqy.doubleduck_android.R;
 import com.example.lianqy.doubleduck_android.model.Dish;
+import com.example.lianqy.doubleduck_android.model.LoginState;
+import com.example.lianqy.doubleduck_android.model.PostDish;
 import com.example.lianqy.doubleduck_android.model.Type;
+import com.example.lianqy.doubleduck_android.service.LoginService;
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.adapter.ManageDishAdapter;
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.dialog.DishShortClickDialog;
 import com.example.lianqy.doubleduck_android.util.BitmapUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -77,6 +87,29 @@ public class ContentFragment extends Fragment {
                         byteArray = byteArray == null ? defaultByteArray : byteArray;
 
                         Dish d = new Dish(dialog.getName(), dialog.getPrice(), mType.getType(), dialog.getDes(), byteArray, 0);
+
+                        //服务器上传菜品
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl("http://172.18.218.192:9090/")
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+                        LoginService service = retrofit.create(LoginService.class);
+                        Call<LoginState> postdish = service.Postdish(new PostDish(d.getName(), d.getDes(), Float.parseFloat(d.getPrice()),
+                                "picurl", 999, "rou", "RT1"));
+                        postdish.enqueue(new Callback<LoginState>() {
+                            @Override
+                            public void onResponse(Call<LoginState> call, Response<LoginState> response) {
+                                LoginState temp = response.body();
+                                if (temp.getState().equals("UploadDishSuccess")) {
+                                    Log.d("output", "上传菜品成功");
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<LoginState> call, Throwable t) {
+
+                            }
+                        });
 
                         if(mDishList == null){
                             mDishList = new ArrayList<>();

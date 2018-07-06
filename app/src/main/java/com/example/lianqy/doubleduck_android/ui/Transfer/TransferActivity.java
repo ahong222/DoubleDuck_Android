@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.lianqy.doubleduck_android.R;
+import com.example.lianqy.doubleduck_android.model.Rtinfo;
+import com.example.lianqy.doubleduck_android.service.LoginService;
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.ManageDishesActivity;
 import com.example.lianqy.doubleduck_android.ui.Order.OrderListActivity;
 import com.example.lianqy.doubleduck_android.ui.RetaurantDetail.RestaurantDetailActivity;
@@ -20,6 +23,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TransferActivity extends AppCompatActivity {
 
@@ -37,7 +45,7 @@ public class TransferActivity extends AppCompatActivity {
         //注册订阅者
         EventBus.getDefault().register(this);
 
-
+        getRtInfo(); //最初的时候获取饭店信息
         setViews();
         setClicks();
     }
@@ -116,6 +124,28 @@ public class TransferActivity extends AppCompatActivity {
         super.onDestroy();
         //注销注册
         EventBus.getDefault().unregister(this);
+    }
+
+    private void getRtInfo() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://172.18.218.192:9090/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        LoginService service = retrofit.create(LoginService.class);
+        Call<Rtinfo> getrtinfo = service.getRtInfo("RT1");
+        getrtinfo.enqueue(new Callback<Rtinfo>() {
+            @Override
+            public void onResponse(Call<Rtinfo> call, Response<Rtinfo> response) {
+                Rtinfo temp = response.body();
+                Log.d("output", temp.getRtname());
+                Log.d("output", temp.getRtloc());
+            }
+
+            @Override
+            public void onFailure(Call<Rtinfo> call, Throwable t) {
+
+            }
+        });
     }
 
 }
