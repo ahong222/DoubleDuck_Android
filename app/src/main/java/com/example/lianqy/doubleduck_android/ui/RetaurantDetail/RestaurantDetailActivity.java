@@ -117,10 +117,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void fetchPicAndReplace() {
         byteArray = null;
         doCallFetchPic();
-        byteArray = byteArray == null ? BitmapUtil.getDefaultByteArray(this): byteArray;
+        //byteArray = byteArray == null ? BitmapUtil.getDefaultByteArray(this): byteArray;
 
         //更换logo内容
-        logo.setImageBitmap(BitmapUtil.byteArrayToBitmap(byteArray));
+        //logo.setImageBitmap(BitmapUtil.byteArrayToBitmap(byteArray));
     }
 
     private void doCallFetchPic() {
@@ -159,9 +159,20 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             cursor.close();
 
             //设置图片并将图片的bitmap格式转换成byte[]存储起来
-            Bitmap bm = BitmapFactory.decodeFile(picturePath);
+            //Bitmap bm = BitmapFactory.decodeFile(picturePath);
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_add_64);
+            try {
+                bm = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             //photo.setImageBitmap(bm);
             byteArray = BitmapUtil.bitmapToByteArray(bm);
+
+            byteArray = byteArray == null ? BitmapUtil.getDefaultByteArray(this): byteArray;
+
+            //更换logo内容
+            logo.setImageBitmap(BitmapUtil.byteArrayToBitmap(byteArray));
         }
     }
 

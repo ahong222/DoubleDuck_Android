@@ -25,6 +25,8 @@ import android.widget.ListView;
 
 
 import com.example.lianqy.doubleduck_android.R;
+import com.example.lianqy.doubleduck_android.model.AllDish;
+import com.example.lianqy.doubleduck_android.model.AllDishes;
 import com.example.lianqy.doubleduck_android.model.Dish;
 import com.example.lianqy.doubleduck_android.model.LoginState;
 import com.example.lianqy.doubleduck_android.model.Type;
@@ -34,6 +36,7 @@ import com.example.lianqy.doubleduck_android.ui.ManageDishes.adapter.DrawerAdapt
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.dialog.TypeLongClickDialog;
 import com.example.lianqy.doubleduck_android.util.BitmapUtil;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +64,8 @@ public class ManageDishesActivity extends AppCompatActivity{
 
         initTypesAndDishes();
 
+        getdishes();
+
         /*初始化View*/
         initViews();
 
@@ -70,6 +75,33 @@ public class ManageDishesActivity extends AppCompatActivity{
         /*设置Drawerlayout开关*/
         setDrawerToggle();
 
+    }
+
+    private void getdishes() {
+        //获取菜品
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://172.18.218.192:9090/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        LoginService service = retrofit.create(LoginService.class);
+        Call<AllDishes> getdish = service.Getdishes("RT1");
+        getdish.enqueue(new Callback<AllDishes>() {
+            @Override
+            public void onResponse(Call<AllDishes> call, Response<AllDishes> response) {
+                AllDishes temp = response.body();
+                List<AllDish> dish = temp.getAlldishes();
+                Log.d("output", String.valueOf(dish.size()));
+                for (int i = 0; i < dish.size(); i ++) {
+                    Log.d("output", dish.get(i).getCategory());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AllDishes> call, Throwable t) {
+                Log.d("output", "失败了");
+                Log.d("output", t.getMessage());
+            }
+        });
     }
 
     /*初始化View*/
@@ -368,7 +400,7 @@ public class ManageDishesActivity extends AppCompatActivity{
         Type type2 = new Type("烧烤类", dishesShaokao);
         Type type3 = new Type("饮料类", dishesYinliao);
 
-        mTypeList.add(type1);
+        //mTypeList.add(type1);
         mTypeList.add(type2);
         mTypeList.add(type3);
 

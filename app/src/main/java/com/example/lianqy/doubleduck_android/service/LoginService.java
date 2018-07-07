@@ -1,11 +1,16 @@
 package com.example.lianqy.doubleduck_android.service;
 
+import com.example.lianqy.doubleduck_android.model.AllDish;
+import com.example.lianqy.doubleduck_android.model.AllDishes;
 import com.example.lianqy.doubleduck_android.model.Errorinfo;
 import com.example.lianqy.doubleduck_android.model.LoginState;
 import com.example.lianqy.doubleduck_android.model.PostDish;
 import com.example.lianqy.doubleduck_android.model.Rtinfo;
 import com.example.lianqy.doubleduck_android.model.Saler;
 import com.example.lianqy.doubleduck_android.model.postcate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -31,4 +36,7 @@ public interface LoginService {
 
     @POST("v1/salers/dish")
     Call<LoginState>Postdish(@Body PostDish postdish);
+
+    @GET("v1/dish/")
+    Call<AllDishes>Getdishes(@Query("rtname") String rtname);
 }

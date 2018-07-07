@@ -1,6 +1,5 @@
 package com.example.lianqy.doubleduck_android.ui.ManageDishes;
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
@@ -50,6 +49,7 @@ public class ContentFragment extends Fragment {
     private Type mType;
     private List<Dish> mDishList = new ArrayList<>();
     private FloatingActionButton addDishBtn;
+    private DishShortClickDialog dialog;
 
     private byte[] byteArray = null;
 
@@ -76,7 +76,8 @@ public class ContentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //增加新的dish
-                final DishShortClickDialog dialog = new DishShortClickDialog(getContext(), null);
+                //final DishShortClickDialog dialog = new DishShortClickDialog(getContext(), null);
+                dialog = new DishShortClickDialog(getContext(), null);
                 dialog.show();
                 dialog.setClickListener(new DishShortClickDialog.ClickListenerInterface() {
                     @Override
@@ -131,10 +132,10 @@ public class ContentFragment extends Fragment {
                         //点击icon直接转到手机相册界面选取图片作为菜品的新icon
                         doCallFetchPic();
 
-                        byte[] defaultByteArray = BitmapUtil.getDefaultByteArray(getContext());
-                        byteArray = byteArray == null ? defaultByteArray : byteArray;
+                        //byte[] defaultByteArray = BitmapUtil.getDefaultByteArray(getContext());
+                        //byteArray = byteArray == null ? defaultByteArray : byteArray;
 
-                        dialog.setSrc(byteArray);
+                        //dialog.setSrc(byteArray);
                     }
                 });
             }
@@ -234,20 +235,28 @@ public class ContentFragment extends Fragment {
 
             //从图库中选择图片
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            //String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
-            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
+            //Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+            //        filePathColumn, null, null, null);
+            //cursor.moveToFirst();
 
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
+            //int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            //String picturePath = cursor.getString(columnIndex);
+           // cursor.close();
 
             //设置图片并将图片的bitmap格式转换成byte[]存储起来
-            Bitmap bm = BitmapFactory.decodeFile(picturePath);
+            //Bitmap bm = BitmapFactory.decodeFile(picturePath);
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_add_64);
+            try {
+                bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             //photo.setImageBitmap(bm);
             byteArray = BitmapUtil.bitmapToByteArray(bm);
+
+            dialog.setSrc(byteArray);
         }
     }
 }
