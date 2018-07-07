@@ -35,7 +35,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private ImageView logo;
     private TextView clickToChangeLogo;
-    private EditText name, des;
+    private EditText name, des, loc, phone;
     private TextView cancel, sure;
 
     private byte[] byteArray;
@@ -79,6 +79,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void changeRestaurntInfo() {
         String resName = name.getText().toString();
         String resDes = des.getText().toString();
+        String resLoc = loc.getText().toString();
+        String resPhone = phone.getText().toString();
 
         //更新服务器的饭店信息
         Retrofit retrofit = new Retrofit.Builder()
@@ -86,7 +88,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         LoginService service = retrofit.create(LoginService.class);
-        Call<LoginState> postRtinfo = service.Postrt(new Rtinfo("RT1", resDes, "sysu", "131", "url"));
+        Call<LoginState> postRtinfo = service.Postrt(new Rtinfo(resName, resDes, resLoc, resPhone, "url"));
         postRtinfo.enqueue(new Callback<LoginState>() {
             @Override
             public void onResponse(Call<LoginState> call, Response<LoginState> response) {
@@ -130,7 +132,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         logo = findViewById(R.id.Logo);
         name = findViewById(R.id.Name);
         des = findViewById(R.id.Des);
+        loc = findViewById(R.id.Loc);
+        phone = findViewById(R.id.Phone);
+
         clickToChangeLogo = findViewById(R.id.clickChangeLogo);
+
         cancel = findViewById(R.id.Cancel);
         sure = findViewById(R.id.Sure);
     }

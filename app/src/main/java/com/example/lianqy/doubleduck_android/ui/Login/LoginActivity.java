@@ -59,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         //跳转到注册页面
         Intent intent = new Intent();
         intent.setClass(this, RegisterActivity.class);
+        //传入餐厅名字
         startActivity(intent);
     }
 

@@ -36,6 +36,7 @@ public class TransferActivity extends AppCompatActivity {
     private TextView restaurantName, restaurantDes;
     private TextView todayValidOrder, todayBusinessVolume;
     private CardView businessStatisticsCV, dishManagementCV, restaurantBulletinCV;
+    private String RtInfoRTname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class TransferActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setClass(TransferActivity.this, RestaurantDetailActivity.class);
                 //此处intent要传入商家的信息参数
+
                 startActivity(intent);
             }
         });
