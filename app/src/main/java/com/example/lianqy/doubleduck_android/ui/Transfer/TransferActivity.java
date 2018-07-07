@@ -63,6 +63,7 @@ public class TransferActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
+                intent.putExtra(NAME_FROM_TRANSFER, RtInfoRTname);
                 intent.setClass(TransferActivity.this, ManageDishesActivity.class);
                 startActivity(intent);
             }
@@ -116,10 +117,6 @@ public class TransferActivity extends AppCompatActivity {
         dishManagementCV = findViewById(R.id.dishManagementCV);
         restaurantBulletinCV = findViewById(R.id.restaurantBulletinCV);
 
-        //当有餐厅的信息时对上面的组件赋值
-        restaurantName.setText(RtInfoRTname);
-        restaurantDes.setText(RtInfoDes);
-
     }
 
 
@@ -131,7 +128,7 @@ public class TransferActivity extends AppCompatActivity {
         restaurantName.setText(event.name);
 
         RtInfoRTname = event.name;
-        RtInfoRTname = event.des;
+        //RtInfoDes = event.des;
 
         //post新的信息到服务器
     }
@@ -160,8 +157,13 @@ public class TransferActivity extends AppCompatActivity {
                 Rtinfo temp = response.body();
                 RtInfoRTname = temp.getRtname();
                 RtInfoDes = temp.getRtdes();
-                Log.d("output", temp.getRtname());
-                Log.d("output", temp.getRtloc());
+                Log.d("outputName", temp.getRtname());
+                Log.d("outputDes", temp.getRtdes());
+
+
+                //当有餐厅的信息时对上面的组件赋值
+                restaurantName.setText(RtInfoRTname);
+                restaurantDes.setText(RtInfoDes);
             }
 
             @Override

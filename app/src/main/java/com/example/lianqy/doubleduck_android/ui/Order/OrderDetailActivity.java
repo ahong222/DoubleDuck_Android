@@ -66,7 +66,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         orderNum.setText(String.valueOf(order.getOrderNum()));
         deskNum.setText(String.valueOf(order.getDeskNum()));
-        state.setText(String.valueOf(order.getState()));
+        state.setText(order.getState());
         ///....amount赋值
         amount.setText("￥15");
     }

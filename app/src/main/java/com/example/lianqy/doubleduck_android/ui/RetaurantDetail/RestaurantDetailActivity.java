@@ -76,6 +76,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 sloc = temp.getRtloc();
                 sphone = temp.getRtphone();
 
+                name.setText(sname);
+                des.setText(sdes);
+                loc.setText(sloc);
+                phone.setText(sphone);
+
                 Log.d("output", temp.getRtname());
                 Log.d("output", temp.getRtloc());
             }
@@ -148,7 +153,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         // 回调的方式
         byteArray = byteArray == null ? BitmapUtil.getDefaultLogoByteArray(this): byteArray;
 
-        EventBus.getDefault().post(new ChangeSalerInfoBusEvent(resName, resDes, resLoc, resPhone, byteArray));
+        EventBus.getDefault().post(new ChangeSalerInfoBusEvent(sname, resDes, resLoc, resPhone, byteArray));
     }
 
     private void fetchPicAndReplace() {
@@ -171,11 +176,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         des = findViewById(R.id.Des);
         loc = findViewById(R.id.Loc);
         phone = findViewById(R.id.Phone);
-
-        name.setText(sname);
-        des.setText(sdes);
-        loc.setText(sloc);
-        phone.setText(sphone);
 
         clickToChangeLogo = findViewById(R.id.clickChangeLogo);
 

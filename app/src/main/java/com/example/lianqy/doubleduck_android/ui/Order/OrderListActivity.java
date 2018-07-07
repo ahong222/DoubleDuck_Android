@@ -85,7 +85,7 @@ public class OrderListActivity extends AppCompatActivity {
         Dish d21 = new Dish("冰可乐", "¥3", "2","透心凉！心飞扬", array4);
         dishes.add(d21);
 
-        Order o1 = new Order(1, 1, dishes, 15, 1);
+        Order o1 = new Order(1, 1, dishes, 15, "已完成");
         //dishes.remove(dishes.size()-1);
         //Order o2 = new Order(2, 1, dishes, 52, 2);
         //dishes.remove(dishes.size()-1);

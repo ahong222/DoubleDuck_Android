@@ -14,9 +14,9 @@ public class Order implements Serializable{
     //private Date date;
     private ArrayList<Dish> dishs;
     private int amount;
-    private int state;
+    private String state;
 
-    public Order(int orderNum, int deskNumm, ArrayList<Dish> dishes, int amount, int state){
+    public Order(int orderNum, int deskNumm, ArrayList<Dish> dishes, int amount, String state){
         this.orderNum = orderNum;
         this.deskNum = deskNumm;
         this.dishs = dishes;
@@ -57,11 +57,11 @@ public class Order implements Serializable{
         this.amount = amount;
     }
 
-    public int getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(String state) {
         this.state = state;
     }
 }
