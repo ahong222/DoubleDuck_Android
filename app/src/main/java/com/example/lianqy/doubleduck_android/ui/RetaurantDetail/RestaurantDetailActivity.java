@@ -88,7 +88,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         LoginService service = retrofit.create(LoginService.class);
-        Call<LoginState> postRtinfo = service.Postrt(new Rtinfo(resName, resDes, resLoc, resPhone, "url"));
+        Call<LoginState> postRtinfo = service.Postrt(new Rtinfo("RT1", resDes, resLoc, resPhone, "url"));
         postRtinfo.enqueue(new Callback<LoginState>() {
             @Override
             public void onResponse(Call<LoginState> call, Response<LoginState> response) {

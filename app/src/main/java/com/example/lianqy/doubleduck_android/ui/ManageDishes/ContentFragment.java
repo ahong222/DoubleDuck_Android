@@ -95,7 +95,7 @@ public class ContentFragment extends Fragment {
                                 .build();
                         LoginService service = retrofit.create(LoginService.class);
                         Call<LoginState> postdish = service.Postdish(new PostDish(d.getName(), d.getDes(), Float.parseFloat(d.getPrice()),
-                                "picurl", 999, "rou", "RT1"));
+                                "picurl", 999, mType.getType(), "RT1"));
                         postdish.enqueue(new Callback<LoginState>() {
                             @Override
                             public void onResponse(Call<LoginState> call, Response<LoginState> response) {
