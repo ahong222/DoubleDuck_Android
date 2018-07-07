@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,6 +47,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.lianqy.doubleduck_android.ui.Transfer.TransferActivity.NAME_FROM_TRANSFER;
+
 public class ManageDishesActivity extends AppCompatActivity{
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
@@ -56,6 +59,8 @@ public class ManageDishesActivity extends AppCompatActivity{
 
     private List<Type> mTypeList = new ArrayList<>();
 
+    private String name;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,8 @@ public class ManageDishesActivity extends AppCompatActivity{
         setContentView(R.layout.activity_manage_dishes);
 
         initTypesAndDishes();
+
+        getInfo();
 
         getdishes();
 
@@ -77,6 +84,11 @@ public class ManageDishesActivity extends AppCompatActivity{
 
     }
 
+    private void getInfo() {
+        Intent i = getIntent();
+        name = i.getStringExtra(NAME_FROM_TRANSFER);
+    }
+
     private void getdishes() {
         //获取菜品
         Retrofit retrofit = new Retrofit.Builder()
@@ -84,12 +96,15 @@ public class ManageDishesActivity extends AppCompatActivity{
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         LoginService service = retrofit.create(LoginService.class);
-        Call<AllDishes> getdish = service.Getdishes("RT1");
+        Call<AllDishes> getdish = service.Getdishes(name);
         getdish.enqueue(new Callback<AllDishes>() {
             @Override
             public void onResponse(Call<AllDishes> call, Response<AllDishes> response) {
                 AllDishes temp = response.body();
-                List<AllDish> dish = temp.getAlldishes();
+                List<AllDish> dish = temp.getAlldishes();  //AllDish是一个种类   dish种类列表
+                //现在将这个种类列表转化成typeList
+                //emmm....
+
                 Log.d("output", String.valueOf(dish.size()));
                 for (int i = 0; i < dish.size(); i ++) {
                     Log.d("output", dish.get(i).getCategory());
@@ -307,7 +322,7 @@ public class ManageDishesActivity extends AppCompatActivity{
                  .addConverterFactory(GsonConverterFactory.create())
                  .build();
          LoginService service = retrofit.create(LoginService.class);
-         Call<LoginState> upcate = service.Postcate(new postcate("RT1", t.getType()));
+         Call<LoginState> upcate = service.Postcate(new postcate(name, t.getType()));
          upcate.enqueue(new Callback<LoginState>() {
              @Override
              public void onResponse(Call<LoginState> call, Response<LoginState> response) {

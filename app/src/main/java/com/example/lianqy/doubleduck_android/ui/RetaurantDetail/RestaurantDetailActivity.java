@@ -18,6 +18,7 @@ import com.example.lianqy.doubleduck_android.R;
 import com.example.lianqy.doubleduck_android.model.LoginState;
 import com.example.lianqy.doubleduck_android.model.Rtinfo;
 import com.example.lianqy.doubleduck_android.service.LoginService;
+import com.example.lianqy.doubleduck_android.ui.Statistics.ResStatisticsActivity;
 import com.example.lianqy.doubleduck_android.ui.Transfer.bus.ChangeSalerInfoBusEvent;
 import com.example.lianqy.doubleduck_android.util.BitmapUtil;
 
@@ -29,6 +30,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.lianqy.doubleduck_android.ui.Transfer.TransferActivity.NAME_FROM_TRANSFER;
+
 public class RestaurantDetailActivity extends AppCompatActivity {
 
     private static final int RESULT = 1;
@@ -38,6 +41,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private EditText name, des, loc, phone;
     private TextView cancel, sure;
 
+    private String sname, sdes, sloc, sphone;
+
     private byte[] byteArray;
 
     @Override
@@ -46,8 +51,40 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_restaurant_info);
 
+        getInfo();
+
         setViews();
         setClicks();
+    }
+
+    private void getInfo() {
+        Intent i = getIntent();
+        sname = i.getStringExtra(NAME_FROM_TRANSFER);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://172.18.218.192:9090/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+                LoginService service = retrofit.create(LoginService.class);
+        Call<Rtinfo> getrtinfo = service.getRtInfo(sname);
+        getrtinfo.enqueue(new Callback<Rtinfo>() {
+            @Override
+            public void onResponse(Call<Rtinfo> call, Response<Rtinfo> response) {
+                Rtinfo temp = response.body();
+                //RtInfoRTname = temp.getRtname();
+                sdes = temp.getRtdes();
+                sloc = temp.getRtloc();
+                sphone = temp.getRtphone();
+
+                Log.d("output", temp.getRtname());
+                Log.d("output", temp.getRtloc());
+            }
+
+            @Override
+            public void onFailure(Call<Rtinfo> call, Throwable t) {
+
+            }
+        });
     }
 
 
@@ -88,7 +125,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         LoginService service = retrofit.create(LoginService.class);
-        Call<LoginState> postRtinfo = service.Postrt(new Rtinfo("RT1", resDes, resLoc, resPhone, "url"));
+        Call<LoginState> postRtinfo = service.Postrt(new Rtinfo(sname, resDes, resLoc, resPhone, "url"));
         postRtinfo.enqueue(new Callback<LoginState>() {
             @Override
             public void onResponse(Call<LoginState> call, Response<LoginState> response) {
@@ -111,7 +148,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         // 回调的方式
         byteArray = byteArray == null ? BitmapUtil.getDefaultLogoByteArray(this): byteArray;
 
-        EventBus.getDefault().post(new ChangeSalerInfoBusEvent(resName, resDes, byteArray));
+        EventBus.getDefault().post(new ChangeSalerInfoBusEvent(resName, resDes, resLoc, resPhone, byteArray));
     }
 
     private void fetchPicAndReplace() {
@@ -134,6 +171,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         des = findViewById(R.id.Des);
         loc = findViewById(R.id.Loc);
         phone = findViewById(R.id.Phone);
+
+        name.setText(sname);
+        des.setText(sdes);
+        loc.setText(sloc);
+        phone.setText(sphone);
 
         clickToChangeLogo = findViewById(R.id.clickChangeLogo);
 

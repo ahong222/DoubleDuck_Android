@@ -29,6 +29,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.lianqy.doubleduck_android.ui.Login.LoginActivity.RTNAME;
+
 public class TransferActivity extends AppCompatActivity {
 
 
@@ -37,6 +39,9 @@ public class TransferActivity extends AppCompatActivity {
     private TextView todayValidOrder, todayBusinessVolume;
     private CardView businessStatisticsCV, dishManagementCV, restaurantBulletinCV;
     private String RtInfoRTname;
+    private String RtInfoDes;
+
+    public static String NAME_FROM_TRANSFER = "name";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +74,7 @@ public class TransferActivity extends AppCompatActivity {
                 //跳转到订单列表的界面
                 Intent intent = new Intent();
                 intent.setClass(TransferActivity.this, OrderListActivity.class);
+                intent.putExtra(NAME_FROM_TRANSFER, RtInfoRTname);
                 startActivity(intent);
             }
         });
@@ -80,7 +86,7 @@ public class TransferActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setClass(TransferActivity.this, RestaurantDetailActivity.class);
                 //此处intent要传入商家的信息参数
-
+                intent.putExtra(NAME_FROM_TRANSFER, RtInfoRTname);
                 startActivity(intent);
             }
         });
@@ -92,6 +98,7 @@ public class TransferActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setClass(TransferActivity.this, ResStatisticsActivity.class);
                 //此处intent要传入商家的信息参数
+                intent.putExtra(NAME_FROM_TRANSFER, RtInfoRTname);
                 startActivity(intent);
             }
         });
@@ -110,6 +117,9 @@ public class TransferActivity extends AppCompatActivity {
         restaurantBulletinCV = findViewById(R.id.restaurantBulletinCV);
 
         //当有餐厅的信息时对上面的组件赋值
+        restaurantName.setText(RtInfoRTname);
+        restaurantDes.setText(RtInfoDes);
+
     }
 
 
@@ -119,6 +129,11 @@ public class TransferActivity extends AppCompatActivity {
         restaurantIcon.setImageBitmap(BitmapUtil.byteArrayToBitmap(event.logo));
         restaurantDes.setText(event.des);
         restaurantName.setText(event.name);
+
+        RtInfoRTname = event.name;
+        RtInfoRTname = event.des;
+
+        //post新的信息到服务器
     }
 
     @Override
@@ -129,16 +144,22 @@ public class TransferActivity extends AppCompatActivity {
     }
 
     private void getRtInfo() {
+
+        Intent i = this.getIntent();
+        RtInfoRTname = i.getStringExtra(RTNAME);
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://172.18.218.192:9090/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         LoginService service = retrofit.create(LoginService.class);
-        Call<Rtinfo> getrtinfo = service.getRtInfo("RT1");
+        Call<Rtinfo> getrtinfo = service.getRtInfo(RtInfoRTname);
         getrtinfo.enqueue(new Callback<Rtinfo>() {
             @Override
             public void onResponse(Call<Rtinfo> call, Response<Rtinfo> response) {
                 Rtinfo temp = response.body();
+                RtInfoRTname = temp.getRtname();
+                RtInfoDes = temp.getRtdes();
                 Log.d("output", temp.getRtname());
                 Log.d("output", temp.getRtloc());
             }

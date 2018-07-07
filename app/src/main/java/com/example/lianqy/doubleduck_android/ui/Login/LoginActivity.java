@@ -28,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
     public EditText account_text;
     public EditText password_text;
 
+    public static String RTNAME = "rtName";
+
 
     @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         Log.d("output", state.getState());
                         Intent intent = new Intent();
+                        intent.putExtra(RTNAME, state.getState());
                         intent.setClass(LoginActivity.this, TransferActivity.class);
                         startActivity(intent);
                         finish();
