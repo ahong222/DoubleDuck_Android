@@ -3,6 +3,7 @@ package com.example.lianqy.doubleduck_android.ui.Login;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -87,15 +88,16 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<LoginState> call, Response<LoginState> response) {
                     LoginState state = response.body();
-                    if (state.getState().equals("OK")) {
+                    if (state.getState().equals("noexit")) {
+                        Toast.makeText(getApplicationContext(), "该用户不存在", Toast.LENGTH_SHORT).show();
+                    } else if (state.getState().equals("Fail")){
+                        Toast.makeText(getApplicationContext(), "密码错误", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.d("output", state.getState());
                         Intent intent = new Intent();
                         intent.setClass(LoginActivity.this, TransferActivity.class);
                         startActivity(intent);
                         finish();
-                    } else if (state.getState().equals("Fail")){
-                        Toast.makeText(getApplicationContext(), "密码错误", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "该用户不存在", Toast.LENGTH_SHORT).show();
                     }
                 }
 
