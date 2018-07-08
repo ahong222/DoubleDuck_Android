@@ -190,6 +190,7 @@ public class ManageDishesActivity extends AppCompatActivity{
         setSupportActionBar(mToolbar);
 
         //设置ActionBar的指示图标可见，设置ActionBar上的应用图标位置处可以被单击
+        //设置ActionBar的指示图标可见，设置ActionBar上的应用图标位置处可以被单击
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle(contentTitle);
