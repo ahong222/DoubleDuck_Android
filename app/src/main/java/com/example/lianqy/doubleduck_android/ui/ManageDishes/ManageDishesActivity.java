@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
@@ -29,6 +30,7 @@ import com.example.lianqy.doubleduck_android.R;
 import com.example.lianqy.doubleduck_android.model.AllDish;
 import com.example.lianqy.doubleduck_android.model.AllDishes;
 import com.example.lianqy.doubleduck_android.model.Dish;
+import com.example.lianqy.doubleduck_android.model.Disheslist;
 import com.example.lianqy.doubleduck_android.model.LoginState;
 import com.example.lianqy.doubleduck_android.model.Type;
 import com.example.lianqy.doubleduck_android.model.postcate;
@@ -41,6 +43,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,7 +70,7 @@ public class ManageDishesActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_dishes);
 
-        initTypesAndDishes();
+        //initTypesAndDishes();
 
         getInfo();
 
@@ -103,11 +106,11 @@ public class ManageDishesActivity extends AppCompatActivity{
                 AllDishes temp = response.body();
                 List<AllDish> dish = temp.getAlldishes();  //AllDish是一个种类   dish种类列表
                 //现在将这个种类列表转化成typeList
-                //emmm....
+                transSelfType(dish);
 
                 Log.d("output", String.valueOf(dish.size()));
                 for (int i = 0; i < dish.size(); i ++) {
-                    Log.d("output", dish.get(i).getCategory());
+                    Log.d("output获取的种类名称", dish.get(i).getCategory());
                 }
             }
 
@@ -117,6 +120,52 @@ public class ManageDishesActivity extends AppCompatActivity{
                 Log.d("output", t.getMessage());
             }
         });
+    }
+
+    private void transSelfType(final List<AllDish> dish) {
+        //AllDish是一个种类   dish种类列表
+        //现在将这个种类列表转化成typeList
+        for (int i = 0; i < dish.size(); i ++){
+            final String typeName = dish.get(i).getCategory();
+            Type p = new Type(dish.get(i).getCategory(), null);
+            final List<Disheslist> dishesInType;
+            dishesInType = dish.get(i).getDisheslist();
+
+            //将种类里面的菜品再转化成自己写的类Dish
+            final List<Dish> dishListSelf = new ArrayList<>();
+            for (int j = 0; j < dishesInType.size(); j ++){
+                final Disheslist dl = dishesInType.get(i);
+                Log.d("output dl name: ", dl.getDishname());
+                final String spic = dl.getDishpict();
+
+                String[] sub = spic.split("/");
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://p8pbukobc.bkt.clouddn.com/")
+                        .build();
+                LoginService service = retrofit.create(LoginService.class);
+                Call<ResponseBody>getimg = service.Getpic(sub[sub.length - 1]);
+                getimg.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Log.d("output get img： ", "success");
+                        Bitmap b = BitmapFactory.decodeStream(response.body().byteStream());
+                        dishListSelf.add(new Dish(dl.getDishname(), String.valueOf(dl.getDishprice()),
+                                typeName, dl.getDishdis(),
+                                BitmapUtil.bitmapToByteArray(b), dl.getDishsale()));
+                        Log.d("out dish: ", dl.getDishname());
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.d("output", "fail");
+                    }
+                });
+            }
+            //dishListSelf增加完全部菜品之后，在设置那个type的dishlist
+            p.setDishes(dishListSelf);
+            mTypeList.add(p);
+        }
     }
 
     /*初始化View*/
@@ -132,6 +181,8 @@ public class ManageDishesActivity extends AppCompatActivity{
         mToolbar = findViewById(R.id.toolbar);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        resetAdapter();
     }
 
     /*设置ActionBar*/
@@ -163,6 +214,7 @@ public class ManageDishesActivity extends AppCompatActivity{
     //开启frament界面并且传递参数
     public void selectItem(int position) {
         Bundle bundle = new Bundle();
+        bundle.putString("name", name);
         bundle.putSerializable(ContentFragment.SELECTED_ITEM, mAdapter.getType(position));
         Fragment contentFragment = new ContentFragment();
         contentFragment.setArguments(bundle);
@@ -419,6 +471,12 @@ public class ManageDishesActivity extends AppCompatActivity{
         mTypeList.add(type2);
         mTypeList.add(type3);
 
+    }
+
+    @Override
+    public void onResume(){
+         super.onResume();
+        resetAdapter();
     }
 
 }

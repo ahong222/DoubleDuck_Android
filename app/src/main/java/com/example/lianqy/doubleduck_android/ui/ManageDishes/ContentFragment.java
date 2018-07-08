@@ -62,11 +62,14 @@ public class ContentFragment extends Fragment {
 
     private byte[] byteArray = null;
 
+    private String name;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         Bundle bd = getArguments();
         mType = (Type) bd.getSerializable(SELECTED_ITEM);
+        name = bd.getString("name");
         mDishList = mType.getDishes();
 
         view = inflater.inflate(R.layout.fragment_manage_dishes, null);
@@ -78,6 +81,13 @@ public class ContentFragment extends Fragment {
 
         return view;
 
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        setDishRV();
     }
 
     private void setClicks() {
@@ -114,7 +124,7 @@ public class ContentFragment extends Fragment {
                                             .build();
                                     LoginService service = retrofit.create(LoginService.class);
                                     Call<LoginState> postdish = service.Postdish(new PostDish(d.getName(), d.getDes(), Float.parseFloat(d.getPrice()),
-                                            logourl,  Integer.parseInt("999"), mType.getType(), "RT1"));
+                                            logourl,  Integer.parseInt("999"), mType.getType(), name));
                                     postdish.enqueue(new Callback<LoginState>() {
                                         @Override
                                         public void onResponse(Call<LoginState> call, Response<LoginState> response) {
