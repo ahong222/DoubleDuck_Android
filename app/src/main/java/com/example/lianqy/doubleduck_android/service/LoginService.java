@@ -12,10 +12,13 @@ import com.example.lianqy.doubleduck_android.model.postcate;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface LoginService {
@@ -39,4 +42,7 @@ public interface LoginService {
 
     @GET("v1/dish/")
     Call<AllDishes>Getdishes(@Query("rtname") String rtname);
+
+    @GET("{key}")
+    Call<ResponseBody>Getpic(@Path("key") String key);
 }

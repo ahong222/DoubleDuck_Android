@@ -1,6 +1,7 @@
 package com.example.lianqy.doubleduck_android.ui.Transfer;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -23,6 +24,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,9 +52,9 @@ public class TransferActivity extends AppCompatActivity {
 
         //注册订阅者
         EventBus.getDefault().register(this);
+        setViews();
 
         getRtInfo(); //最初的时候获取饭店信息
-        setViews();
         setClicks();
     }
 
@@ -155,10 +157,31 @@ public class TransferActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Rtinfo> call, Response<Rtinfo> response) {
                 Rtinfo temp = response.body();
+                String slogo = temp.getRtlogo();
                 RtInfoRTname = temp.getRtname();
                 RtInfoDes = temp.getRtdes();
                 Log.d("outputName", temp.getRtname());
                 Log.d("outputDes", temp.getRtdes());
+
+                String[] sub = slogo.split("/");
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://p8pbukobc.bkt.clouddn.com/")
+                        .build();
+                LoginService service = retrofit.create(LoginService.class);
+                Call<ResponseBody>getimg = service.Getpic(sub[sub.length - 1]);
+                getimg.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Log.d("output", "success");
+                        restaurantIcon.setImageBitmap(BitmapFactory.decodeStream(response.body().byteStream()));
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.d("output", "fail");
+                    }
+                });
 
 
                 //当有餐厅的信息时对上面的组件赋值

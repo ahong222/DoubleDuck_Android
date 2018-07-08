@@ -6,11 +6,17 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.example.lianqy.doubleduck_android.R;
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.ManageDishesActivity;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class BitmapUtil {
     public static byte[] drawableToByteArray(Drawable drawable){
@@ -63,4 +69,28 @@ public class BitmapUtil {
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo1);
         return bitmapToByteArray(bitmap);
     }
+
+    public static byte[] compressImage(Bitmap image) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        int options = 100;
+        while (baos.toByteArray().length / 1024 > 250) { //循环判断如果压缩后图片是否大于100kb,大于继续压缩
+            baos.reset();//重置baos即清空baos
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
+            options -= 10;//每次都减少10
+            if (options <= 10) {
+                break;
+            }
+        }
+        byte[] byteArray = baos.toByteArray();
+        try {
+            if (baos != null) {
+                baos.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return byteArray;
+    }
+
 }

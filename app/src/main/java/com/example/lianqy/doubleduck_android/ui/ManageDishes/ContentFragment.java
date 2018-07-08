@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -26,8 +27,15 @@ import com.example.lianqy.doubleduck_android.service.LoginService;
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.adapter.ManageDishAdapter;
 import com.example.lianqy.doubleduck_android.ui.ManageDishes.dialog.DishShortClickDialog;
 import com.example.lianqy.doubleduck_android.util.BitmapUtil;
+import com.example.lianqy.doubleduck_android.utils.Auth;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UploadManager;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -37,6 +45,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.lianqy.doubleduck_android.util.BitmapUtil.compressImage;
 
 public class ContentFragment extends Fragment {
 
@@ -84,41 +93,54 @@ public class ContentFragment extends Fragment {
                     public void doResetOrSure() {
                         //按下确定键增加新的dish
 
-                        byte[] defaultByteArray = BitmapUtil.getDefaultByteArray(getContext());
-                        byteArray = byteArray == null ? defaultByteArray : byteArray;
-
-                        Dish d = new Dish(dialog.getName(), dialog.getPrice(), mType.getType(), dialog.getDes(), byteArray, 0);
-
-                        //服务器上传菜品
-                        Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl("http://172.18.218.192:9090/")
-                                .addConverterFactory(GsonConverterFactory.create())
-                                .build();
-                        LoginService service = retrofit.create(LoginService.class);
-                        Call<LoginState> postdish = service.Postdish(new PostDish(d.getName(), d.getDes(), Float.parseFloat(d.getPrice()),
-                                "picurl",  Integer.parseInt("999"), mType.getType(), "RT1"));
-                        postdish.enqueue(new Callback<LoginState>() {
+                        UploadManager uploadManager = new UploadManager();
+                        String AccessKey = "IHMM2Arh9QKzsA1YUX-r7z0XyGLW8KCkWMV7-Ydg";
+                        String SecretKey = "YxOfh_tCFteKZ1uHVjbK6stvSEhK8Em7BF66DrZ4";
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+                        String key = "icon_" + sdf.format(new Date());
+                        uploadManager.put(byteArray, key, Auth.create(AccessKey, SecretKey).uploadToken("systemimage"), new UpCompletionHandler() {
                             @Override
-                            public void onResponse(Call<LoginState> call, Response<LoginState> response) {
-                                LoginState temp = response.body();
-                                if (temp.getState().equals("UploadDishSuccess")) {
-                                    Log.d("output", "上传菜品成功");
+                            public void complete(String key, ResponseInfo info, JSONObject response) {
+                                if (info.isOK()) {
+                                    Log.d("output", "上传成功");
+                                    String logourl = "http://p8pbukobc.bkt.clouddn.com/" + key;
+
+                                    Dish d = new Dish(dialog.getName(), dialog.getPrice(), mType.getType(), dialog.getDes(), byteArray, 0);
+
+                                    //服务器上传菜品
+                                    Retrofit retrofit = new Retrofit.Builder()
+                                            .baseUrl("http://172.18.218.192:9090/")
+                                            .addConverterFactory(GsonConverterFactory.create())
+                                            .build();
+                                    LoginService service = retrofit.create(LoginService.class);
+                                    Call<LoginState> postdish = service.Postdish(new PostDish(d.getName(), d.getDes(), Float.parseFloat(d.getPrice()),
+                                            logourl,  Integer.parseInt("999"), mType.getType(), "RT1"));
+                                    postdish.enqueue(new Callback<LoginState>() {
+                                        @Override
+                                        public void onResponse(Call<LoginState> call, Response<LoginState> response) {
+                                            LoginState temp = response.body();
+                                            if (temp.getState().equals("UploadDishSuccess")) {
+                                                Log.d("output", "上传菜品成功");
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<LoginState> call, Throwable t) {
+
+                                        }
+                                    });
+
+                                    if(mDishList == null){
+                                        mDishList = new ArrayList<>();
+                                    }
+                                    mDishList.add(d);
+                                    mType.setDishes(mDishList);
+                                    dishRV.getAdapter().notifyItemInserted(mDishList.size()-1);
+                                    dialog.dismiss();
+
                                 }
                             }
-
-                            @Override
-                            public void onFailure(Call<LoginState> call, Throwable t) {
-
-                            }
-                        });
-
-                        if(mDishList == null){
-                            mDishList = new ArrayList<>();
-                        }
-                        mDishList.add(d);
-                        mType.setDishes(mDishList);
-                        dishRV.getAdapter().notifyItemInserted(mDishList.size()-1);
-                        dialog.dismiss();
+                        }, null);
                     }
 
                     @Override
@@ -254,7 +276,7 @@ public class ContentFragment extends Fragment {
                 e.printStackTrace();
             }
             //photo.setImageBitmap(bm);
-            byteArray = BitmapUtil.bitmapToByteArray(bm);
+            byteArray = compressImage(bm);
 
             dialog.setSrc(byteArray);
         }
